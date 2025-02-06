@@ -17,6 +17,7 @@
     "react-dom": "^19.0.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^7.1.5",
+    "react-selecto": "^1.26.3",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

@@ -1,27 +1,51 @@
-import { FC, useEffect, useState } from "react";
-import { FilesService } from "../api/filesApi";
+import { FC } from "react";
+
 import { FileItem } from "../api/dto/files.dto";
 import FileCard from "./FileCard";
+import Selecto from "react-selecto";
 
-const FilesList: FC = () => {
-  const [files, setFiles] = useState<FileItem[]>([]);
+interface FilesListProps {
+  onFileSelect: (id: number, type: FileSelectType) => void;
+  files: FileItem[];
+}
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      const data = await FilesService.getFiles();
+export type FileSelectType = "select" | "unselect";
 
-      setFiles(data);
-    };
-
-    fetchFiles();
-  }, []);
-
+const FilesList: FC<FilesListProps> = ({ onFileSelect, files }) => {
   return (
-    <ul className="list">
-      {files.map((item) => (
-        <FileCard key={item.id} fileItem={item} />
-      ))}
-    </ul>
+    <div>
+      {files.length ? (
+        <ul className="list">
+          {files.map((item) => (
+            <div data-id={item.id} key={item.id}>
+              <FileCard fileItem={item} />
+            </div>
+          ))}
+        </ul>
+      ) : (
+        <div>Нет сохраненных файлов</div>
+      )}
+
+      <Selecto
+        container=".list"
+        selectableTargets={[".card"]}
+        selectByClick
+        hitRate={10}
+        selectFromInside
+        toggleContinueSelect={["shift"]}
+        continueSelect={false}
+        onSelect={(e) => {
+          e.added.forEach((el) => {
+            el.classList.add("active");
+            onFileSelect(Number(el.dataset["id"]), "select");
+          });
+          e.removed.forEach((el) => {
+            el.classList.remove("active");
+            onFileSelect(Number(el.dataset["id"]), "unselect");
+          });
+        }}
+      />
+    </div>
   );
 };
 
