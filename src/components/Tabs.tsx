@@ -12,7 +12,7 @@ interface TabsProps {
 
 const Tabs: FC<TabsProps> = ({ onChange, values }) => {
   return (
-    <div>
+    <div style={{display: "flex", gap: "12px"}}>
       {values.map((el) => (
         <button key={el.value} onClick={() => onChange(el.value)}>{el.label}</button>
       ))}

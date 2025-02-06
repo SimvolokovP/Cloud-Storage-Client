@@ -17,10 +17,8 @@ const RegisterForm = () => {
 
     try {
       console.log(formData);
-      const { token } = await AuthService.register(formData);
+      await AuthService.register(formData);
       alert("Успешно!");
-
-      
 
       navigate("/");
     } catch (error) {
@@ -34,7 +32,7 @@ const RegisterForm = () => {
       <h3>Register</h3>
       <form onSubmit={(e) => register(e)}>
         <input
-          type="text"
+          type="mail"
           placeholder="Email"
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />

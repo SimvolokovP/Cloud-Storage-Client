@@ -16,10 +16,9 @@ const LoginForm = () => {
 
     try {
       console.log(formData);
-      const { token } = await AuthService.login(formData);
+      await AuthService.login(formData);
 
       alert("Успешно!");
-
 
       navigate("/");
     } catch (error) {
@@ -33,7 +32,7 @@ const LoginForm = () => {
       <h3>Login</h3>
       <form onSubmit={(e) => login(e)}>
         <input
-          type="text"
+          type="mail"
           placeholder="Email"
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
