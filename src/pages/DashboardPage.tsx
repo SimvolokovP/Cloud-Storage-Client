@@ -4,18 +4,29 @@ import { AuthService } from "../api/authApi";
 import FilesList, { FileSelectType } from "../components/FilesList";
 import FilesControl from "../components/FilesControl";
 import { FileItem } from "../api/dto/files.dto";
-import { FilesService } from "../api/filesApi";
+import { FilesService, FileType } from "../api/filesApi";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [files, setFiles] = useState<FileItem[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  const [filesType, setFilesType] = useState<FileType>("all");
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUser = async () => {
-      const data = await AuthService.getMe();
+      try {
+        const data = await AuthService.getMe();
 
-      setUser(data);
+        setUser(data);
+      } catch (error) {
+        console.warn(error);
+        await AuthService.logout();
+        navigate("/auth");
+      }
     };
 
     fetchUser();
@@ -23,13 +34,17 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const data = await FilesService.getFiles();
+      try {
+        const data = await FilesService.getFiles(filesType);
 
-      setFiles(data);
+        setFiles(data);
+      } catch (error) {
+        console.warn(error);
+      }
     };
 
     fetchFiles();
-  }, []);
+  }, [filesType]);
 
   const onFileSelect = (id: number, type: FileSelectType) => {
     if (type === "select") {
@@ -39,15 +54,15 @@ const DashboardPage = () => {
     }
   };
 
-  // const onClickRemove = () => {
-  //   setSelectedIds([]);
-  //   setFiles((prev) => prev.filter((file) => !selectedIds.includes(file.id)));
-  //   Api.files.remove(selectedIds);
-  // };
+  const onClickRemove = () => {
+    setSelectedIds([]);
+    setFiles((prev) => prev.filter((file) => !selectedIds.includes(file.id)));
+    FilesService.remove(selectedIds);
+  };
 
   return (
     <div className="page">
-      <FilesControl selectedIds={selectedIds} user={user} />
+      <FilesControl onRemove={onClickRemove} filesType={filesType} onTypeChange={setFilesType} selectedIds={selectedIds} user={user} />
       <FilesList files={files} onFileSelect={onFileSelect} />
     </div>
   );

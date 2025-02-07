@@ -18,7 +18,7 @@ const FileCard: FC<FileCardProps> = ({ fileItem }) => {
   const color = getColorByExtension(ext);
 
   return (
-    <li className="card">
+    <li data-id={fileItem.id} className="card">
       {isImage ? (
         <img src={imageUrl} alt={fileItem.filename} />
       ) : (

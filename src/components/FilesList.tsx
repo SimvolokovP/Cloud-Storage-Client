@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 
 import { FileItem } from "../api/dto/files.dto";
 import FileCard from "./FileCard";
@@ -12,14 +12,14 @@ interface FilesListProps {
 export type FileSelectType = "select" | "unselect";
 
 const FilesList: FC<FilesListProps> = ({ onFileSelect, files }) => {
+  const formRef = useRef(null);
+
   return (
-    <div>
+    <div ref={formRef}>
       {files.length ? (
         <ul className="list">
           {files.map((item) => (
-            <div data-id={item.id} key={item.id}>
-              <FileCard fileItem={item} />
-            </div>
+            <FileCard fileItem={item} key={item.id} />
           ))}
         </ul>
       ) : (
@@ -27,7 +27,7 @@ const FilesList: FC<FilesListProps> = ({ onFileSelect, files }) => {
       )}
 
       <Selecto
-        container=".list"
+        container={formRef.current}
         selectableTargets={[".card"]}
         selectByClick
         hitRate={10}
