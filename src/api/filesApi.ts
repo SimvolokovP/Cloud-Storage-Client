@@ -13,4 +13,21 @@ export class FilesService {
   static remove(ids: number[]): Promise<void> {
     return authHost.delete("/files?ids=" + ids);
   }
+
+  static async uploadFile(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+    };
+
+    try {
+      const { data } = await authHost.post("files", formData, config);
+
+      return data;
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 }

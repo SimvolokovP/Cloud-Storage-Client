@@ -1,6 +1,7 @@
 import { ChangeEvent, FC } from "react";
 import { User } from "../api/dto/users.dto";
 import { FileType } from "../api/filesApi";
+import FileUploadBtn from "./FileUploadBtn";
 
 interface FilesControlProps {
   user: User | null;
@@ -40,7 +41,7 @@ const FilesControl: FC<FilesControlProps> = ({
         {filesType !== "trash" && (
           <>
             {" "}
-            <button>New File</button>
+            <FileUploadBtn />
             <button disabled={!selectedIds.length} onClick={handleRemove}>
               Delete ({selectedIds.length})
             </button>
